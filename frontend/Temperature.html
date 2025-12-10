@@ -20,8 +20,10 @@
         <nav class="topnav">
             <div class="nav-center">
                 <a href="index.html">Home</a>
+                <a href="Temperature.html">Temperature</a>
                 <a href="Preasure.html">Preasure</a>
                 <a href="Humidity.html">Humidity</a>
+                <a href="all.html">All Data</a>
             </div>
         </nav>
 
@@ -32,12 +34,17 @@
 
     <div class="container">
         <div id="errors"></div>
-        <canvas id="myChart">
+        <canvas id="chart1">
 
         </canvas>
     </div> 
 
     <script src="src/load_chart.js"></script>
+
+    <script>
+        loadChart('chart1', 'temp', 'Temperature', 'green')
+    </script>
+    
 
 </body>
 </html>

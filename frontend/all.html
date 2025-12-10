@@ -26,24 +26,30 @@
                 <a href="all.html">All Data</a>
             </div>
         </nav>
-        
+
 
     </header>
     
     <div class="bg-image"></div>
 
     <div class="container">
-        <div id="errors"></div>
-        <canvas id="chart1">
+        <canvas id="chart1"></canvas>
+    </div>
+    <div class="container">
+        <canvas id="chart2"></canvas>
+    </div>
+    <div class="container">
+        <canvas id="chart3"></canvas>
+    </div>
 
-        </canvas>
-    </div> 
 
-        <script src="src/load_chart.js"></script>
-        
-        <script>
-            loadChart('chart1', 'pressure', 'Pressure', 'blue')
-        </script>
+    <script src="src/load_chart.js"></script>
+
+    <script>
+        loadChart('chart1', 'temp', 'Temperature', 'green')
+        loadChart('chart2', 'humidity', 'Humidity', 'orange')
+        loadChart('chart3', 'pressure', 'Pressure', 'blue')
+    </script>
 
 </body>
 </html>

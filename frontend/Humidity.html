@@ -22,9 +22,11 @@
                 <a href="index.html">Home</a>
                 <a href="Temperature.html">Temperature</a>
                 <a href="Preasure.html">Preasure</a>
+                <a href="Humidity.html">Humidity</a>
+                <a href="all.html">All Data</a>
             </div>
         </nav>
-
+        
 
     </header>
     
@@ -32,83 +34,15 @@
 
     <div class="container">
         <div id="errors"></div>
-        <canvas id="myChart">
+        <canvas id="chart1">
 
         </canvas>
     </div> 
 
+    <script src="src/load_chart.js"></script>
+
     <script>
-    
-        async function loadChart() {
-            
-            const error_div = document.getElementById('errors');
-
-            let data;
-            try {
-                const res = await fetch('/api/weather');
-
-                // Check HTTP status first
-                if (!res.ok) {
-                    error_div.innerHTML = `<h2 class="error_class">Error fetching chart: HTTP ${res.status}</h2>`;
-                    return;
-                }
-
-                // Try to parse JSON
-                data = await res.json();
-            } catch (err) {
-                error_div.innerHTML = `<h2 class="error_class">Error: did not receive valid JSON.<br>${err}</h2>`;
-                return;
-            }
-
-            const ctx = document.getElementById('myChart');
-
-            const labels = data.map(r => r.Time);
-            const temps = data.map(r => r.Temp);
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Temperature',
-                        data: temps,
-                        backgroundColor: ['green'],
-                        borderWidth: 2,
-                        borderColor: 'green'
-                    }]
-                },
-                options: {
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Temperature Data',
-                            font: {
-                                size: 25
-                            }
-                        },
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                color: '#000'
-                            }
-                        },
-                        tooltip: {
-                            // enabled: false
-                        }
-                    },
-                    layout: {
-                        padding: {
-                            left: 50,
-                            right: 50,
-                            top: 100,
-                            bottom: 100
-                        }
-                    }
-                }
-            });
-        }
-
-        loadChart();
+        loadChart('chart1', 'humidity', 'Humidity', 'orange')
     </script>
 
 </body>

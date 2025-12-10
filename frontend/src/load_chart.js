@@ -1,26 +1,12 @@
+/*
+Java script function to draw chart
+*/
 
-async function loadChart() {
+
+async function loadChart(canvasID, chartType, chartLabel, chartColor) {
     const error_div = document.getElementById('errors');
-    
-    const currentPage = window.location.pathname.split('/').pop();
-    console.log('Current page:', currentPage);
-    
-    let endpoint = '/api/weather'; // default
-    let dataKey = 'temp';  // Changed to lowercase
-    let label = 'Temperature';
-    let color = 'green';
-    
-    if (currentPage === 'Preasure.html') {
-        endpoint = '/api/weather?type=pressure';
-        dataKey = 'pressure';  // Changed to lowercase
-        label = 'Pressure';
-        color = 'blue';
-    } else if (currentPage === 'Humidity.html') {
-        endpoint = '/api/weather?type=humidity';
-        dataKey = 'humidity';  // Changed to lowercase
-        label = 'Humidity';
-        color = 'orange';
-    }
+
+    let endpoint = '/api/weather?type=' + chartType;
     
     let data;
     try {
@@ -35,32 +21,32 @@ async function loadChart() {
         return;
     }
     
-    const ctx = document.getElementById('myChart');
-    const labels = data.map(r => r.time);  // Changed to lowercase
-    const values = data.map(r => r[dataKey]);
+    const ctx = document.getElementById(canvasID);
+    const labels = data.map(r => r.time);  
+    const values = data.map(r => r[chartType]);
     
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: label,
+                label: chartLabel,
                 data: values,
-                backgroundColor: [color],
+                backgroundColor: [chartColor],
                 borderWidth: 2,
-                borderColor: color
+                borderColor: chartColor
             }]
         },
         options: {
             plugins: {
                 title: {
                     display: true,
-                    text: `${label} Data`,
+                    text: `${chartLabel} Data`,
                     font: { size: 25 }
                 },
                 legend: {
                     position: 'right',
-                    labels: { color: '#000' }
+                    labels: { chartColor: '#000' }
                 }
             },
             layout: {
@@ -74,5 +60,3 @@ async function loadChart() {
         }
     });
 }
-
-loadChart();
