@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=1024, initial-scale=.4">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+
+    <title>Weather Station</title>
+
+    <link rel="stylesheet" href="src/styles.css">
+
+</head>        
+<body>
+    <header> 
+        <h1>Weather Station</h1>
+
+        <nav class="topnav">
+            <div class="nav-center">
+                <a href="index.html">Home</a>
+                <a href="Preasure.html">Preasure</a>
+                <a href="Humidity.html">Humidity</a>
+            </div>
+        </nav>
+
+
+    </header>
+    
+    <div class="bg-image"></div>
+
+    <div class="container">
+        <div id="errors"></div>
+        <canvas id="myChart">
+
+        </canvas>
+    </div> 
+
+    <script src="src/load_chart.js"></script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=1024, initial-scale=.4">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+
+    <title>Weather Station</title>
+
+    <link rel="stylesheet" href="src/styles.css">
+
+</head>        
+<body>
+    <header> 
+        <h1>Weather Station</h1>
+
+        <nav class="topnav">
+            <div class="nav-center">
+                <a href="index.html">Home</a>
+                <a href="Temperature.html">Temperature</a>
+                <a href="Humidity.html">Humidity</a>
+            </div>
+        </nav>
+
+
+    </header>
+    
+    <div class="bg-image"></div>
+
+    <div class="container">
+        <div id="errors"></div>
+        <canvas id="myChart">
+
+        </canvas>
+    </div> 
+
+    <script>
+
+    
+        async function loadChart(data) {
+            
+            const error_div = document.getElementById('errors');
+
+            
+            // try {
+            //     const res = await fetch('/api/weather');
+
+            //     // Check HTTP status first
+            //     if (!res.ok) {
+            //         error_div.innerHTML = `<h2 class="error_class">Error fetching chart: HTTP ${res.status}</h2>`;
+            //         return;
+            //     }
+
+            //     // Try to parse JSON
+            //     data = await res.json();
+            // } catch (err) {
+            //     error_div.innerHTML = `<h2 class="error_class">Error: did not receive valid JSON.<br>${err}</h2>`;
+            //     return;
+            // }
+
+            const ctx = document.getElementById('myChart');
+
+            const labels = data.map(r => r.Time);
+            const temps = data.map(r => r.Temp);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temperature',
+                        data: temps,
+                        backgroundColor: ['green'],
+                        borderWidth: 2,
+                        borderColor: 'green'
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Temperature Data',
+                            font: {
+                                size: 25
+                            }
+                        },
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: '#000'
+                            }
+                        },
+                        tooltip: {
+                            // enabled: false
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 50,
+                            right: 50,
+                            top: 100,
+                            bottom: 100
+                        }
+                    }
+                }
+            });
+        }
+
+
+        const apiUrl = '/api/weather'; 
+
+        // Define your query parameters as an object
+        const params = {
+        search: 'keyword',
+        filter: 'category',
+        sort: 'date'
+        };
+
+        // Create a new URLSearchParams object from your parameters
+        const queryParams = new URLSearchParams(params);
+
+        // Construct the full URL with the query string
+        const fullUrl = `${apiUrl}?${queryParams.toString()}`;
+
+        // Make the API request using fetch
+        fetch(fullUrl)
+        .then(response => {
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('API response:', data);
+            loadChart(data);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Handle errors during the API call
+        });
+    
+    
+    
+    </script>
+
+</body>
+</html>
+
+
