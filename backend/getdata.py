@@ -23,9 +23,18 @@ def get_weather():
     column_map = {
         'temp': 'temp',
         'pressure': 'pressure',
-        'humidity': 'humidity'
+        'humidity': 'humidity',
     }
-    
+
+    if 'recent' in request.args:
+        result = query_db("""
+            SELECT *
+            FROM weather_data
+            ORDER BY ID DESC
+            LIMIT 1
+        """)
+        return jsonify(dict(result[0]) if result else {'error': 'No data found'})
+
     column = column_map.get(data_type, 'temp')
     
     # Query with lowercase column names and correct table name

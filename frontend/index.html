@@ -24,6 +24,67 @@
 
     </header>
 
+    <div id="errors"></div>
+
+    <div class="container">
+        <div class="recent_values">
+            <div>
+                <p>Temperature: </p>
+                <div id="t"></div>
+            </div>
+            <div>
+                <p>Humidity: </p>
+                <div id="h"></div>
+            </div>
+            <div>
+                <p>Preasure: </p>
+                <div id="p"></div>
+            </div>
+                
+        </div>
+    </div>
+    
+    <script>
+
+        async function get_recent_data(endpoint) {
+            try {
+                const res = await fetch(endpoint);
+                if (!res.ok) {
+                    error_div.innerHTML = `<h2 class="error_class">Error fetching data: HTTP ${res.status}</h2>`;
+                    return;
+                }
+                data = await res.json();
+                // data = JSON.parse(data);
+            } catch (err) {
+                error_div.innerHTML = `<h2 class="error_class">Error: did not receive valid JSON.<br>${err}</h2>`;
+                return;
+            }
+            
+            return data;
+            
+        }
+        
+        const error_div = document.getElementById('errors');
+        const t = document.getElementById('t');
+        const h = document.getElementById('h');
+        const p = document.getElementById('p');
+
+        let endpoint = '/api/weather?recent';
+        
+        (async () => {
+            const data = await get_recent_data(endpoint);
+
+            if (data) {
+                t.innerHTML = data.temp.toFixed(1);
+                h.innerHTML = data.humidity.toFixed(0);
+                p.innerHTML = data.pressure.toFixed(1);
+            }HTML = data.pressure;
+        
+        })();
+        
+
+    </script>
+
 
 </body>
 </html>
