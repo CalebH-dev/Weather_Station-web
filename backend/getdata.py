@@ -4,6 +4,59 @@ import os
 
 app = Flask(__name__)
 
+
+structure_keys = ['time', 'id']
+
+def limit_data(num_rows, old_list):
+    new_list = []
+    n = len(old_list)
+
+    data_keys = []
+    for k in old_list[0].keys():
+        if k not in structure_keys:
+            data_keys.append(k)
+
+
+    if num_rows <= 0 or n == 0:
+        return new_list
+
+    step = n / num_rows
+
+    for row in range(num_rows):
+        start = int(row * step)
+        end = int((row + 1) * step)
+
+        if start >= n:
+            break
+        if end > n:
+            end = n
+
+        # initialize averages
+        avg = {key: 0.0 for key in data_keys}
+        count = 0
+
+        for i in range(start, end):
+            for key in data_keys:
+                avg[key] += old_list[i][key]
+            count += 1
+
+        if count == 0:
+            continue
+
+        # create a NEW dict (do not mutate input)
+        new_row = {}
+
+        for key in old_list[row].keys():
+            new_row[key] = old_list[start][key]
+
+        for key in data_keys:
+            new_row[key] = avg[key] / count
+
+        new_list.append(new_row)
+
+    return new_list
+
+
 def query_db(query, args=()):
     # Changed from example.db to data.db
     db_path = os.path.join(os.path.dirname(__file__), 'data.db')
@@ -45,7 +98,7 @@ def get_weather():
     """)
     
     data = [dict(row) for row in rows]
-    return jsonify(data)
+    return jsonify(limit_data(250, data))
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=False)

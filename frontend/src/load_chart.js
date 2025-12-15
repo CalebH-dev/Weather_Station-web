@@ -33,8 +33,10 @@ async function loadChart(canvasID, chartType, chartLabel, chartColor) {
                 label: chartLabel,
                 data: values,
                 backgroundColor: [chartColor],
-                borderWidth: 2,
-                borderColor: chartColor
+                borderWidth: 1,
+                borderColor: chartColor,
+                pointRadius: 2,
+                pointHoverRadius: 0
             }]
         },
         options: {
