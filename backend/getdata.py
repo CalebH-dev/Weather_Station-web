@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import sqlite3
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -57,7 +58,7 @@ def limit_data(num_rows, old_list):
     return new_list
 
 
-def query_db(query, args=()):
+def query_db(query, *args):
     # Changed from example.db to data.db
     db_path = os.path.join(os.path.dirname(__file__), 'data.db')
     conn = sqlite3.connect(db_path)
@@ -68,16 +69,12 @@ def query_db(query, args=()):
     return rows
 
 @app.route("/api/weather", methods=['GET'])
-def get_weather():
-    # Get query parameter
-    data_type = request.args.get('type', 'temp')  # default to 'temp'
-    
-    # Map type to database columns (lowercase to match your DB)
-    column_map = {
-        'temp': 'temp',
-        'pressure': 'pressure',
-        'humidity': 'humidity',
-    }
+def get_weather():   
+
+    send = False
+    time_clause = "" 
+    column = ""
+    params = []
 
     if 'recent' in request.args:
         result = query_db("""
@@ -87,18 +84,75 @@ def get_weather():
             LIMIT 1
         """)
         return jsonify(dict(result[0]) if result else {'error': 'No data found'})
-
-    column = column_map.get(data_type, 'temp')
     
-    # Query with lowercase column names and correct table name
-    rows = query_db(f"""
+
+    if 'type' in request.args:
+        data_type = request.args.get('type')  
+        data_type = data_type.lower()
+    
+        # Map type to database columns 
+        ALLOWED_TYPES = {
+            "temp": "temp",
+            "pressure": "pressure",
+            "humidity": "humidity"
+        }
+
+        if data_type not in ALLOWED_TYPES:
+            return {'error': 'type parameter invalid'}
+        else:
+            column = ALLOWED_TYPES[data_type]
+
+        send = True
+
+
+
+        # Range based query
+        if 'range' in request.args:
+            time_range = request.args.get('range', 'all,all')
+            values = time_range.split(',')
+            if(len(values) != 2):
+                return {'error': 'Must include exactly 2 time parameters'}
+            
+            for value in values:
+                if value != 'all':
+                    try: 
+                        datetime.fromisoformat(value)
+                    except ValueError:
+                        return {'error': 'recieved invalid time'}
+
+            conditions = []
+
+            # lower bound
+            if values[0] != "all":
+                conditions.append("time >= ?")
+                params.append(values[0])
+
+            # upper bound
+            if values[1] != "all":
+                conditions.append("time <= ?")
+                params.append(values[1])
+
+            time_clause = ""
+            if conditions:
+                time_clause = "WHERE " + " AND ".join(conditions)
+            
+
+    query = f"""
         SELECT time, {column}
         FROM weather_data
+        {time_clause}
         ORDER BY time ASC
-    """)
+    """
     
-    data = [dict(row) for row in rows]
-    return jsonify(limit_data(250, data))
+    if send:
+        rows = query_db(query, *params)
+
+        data = [dict(row) for row in rows]
+        return jsonify(limit_data(1200, data))
+    
+    else:
+        return {'error': 'recieved no parameters'}
+    
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=3000, debug=False)

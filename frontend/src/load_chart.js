@@ -3,11 +3,13 @@ Java script function to draw chart
 */
 
 
+// fetch data and load chart
 async function loadChart(canvasID, chartType, chartLabel, chartColor) {
     const error_div = document.getElementById('errors');
 
-    let endpoint = '/api/weather?type=' + chartType;
+    let endpoint = '/api/weather?type=' + chartType //+ '&range=2025-12-12T00:00:00.0,2025-12-13T00:00:00.0';
     
+    // attempt fetching data
     let data;
     try {
         const res = await fetch(endpoint);
@@ -22,9 +24,19 @@ async function loadChart(canvasID, chartType, chartLabel, chartColor) {
     }
     
     const ctx = document.getElementById(canvasID);
-    const labels = data.map(r => r.time);  
-    const values = data.map(r => r[chartType]);
+    // move values from json to array
+    const labels_iso = data.map(r => r.time);  
+    let values = data.map(r => r[chartType]);
+
+    let labels = [];
     
+    // change iso format date time objects to local times
+    for (let i = 0; i < labels_iso.length; i++){
+        const date = new Date(labels_iso[i]);
+        labels.push(date.toLocaleString());
+    }
+
+    // load chart
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -35,7 +47,7 @@ async function loadChart(canvasID, chartType, chartLabel, chartColor) {
                 backgroundColor: [chartColor],
                 borderWidth: 1,
                 borderColor: chartColor,
-                pointRadius: 2,
+                pointRadius: 0,
                 pointHoverRadius: 0
             }]
         },
