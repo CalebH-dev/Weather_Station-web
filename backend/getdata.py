@@ -12,14 +12,19 @@ def limit_data(num_rows, old_list):
     new_list = []
     n = len(old_list)
 
+    
     data_keys = []
     for k in old_list[0].keys():
         if k not in structure_keys:
             data_keys.append(k)
 
-
+    # In case of empty or invaid input:
     if num_rows <= 0 or n == 0:
         return new_list
+    
+    # If dataset does not need to be limited
+    if n < num_rows:
+        return old_list
 
     step = n / num_rows
 

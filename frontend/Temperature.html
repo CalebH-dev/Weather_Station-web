@@ -32,6 +32,20 @@
     
     <div class="bg-image"></div>
 
+    <label>Select a time frame:</label>
+
+    <select id="time_selector">
+        <option value="">-- Choose an option --</option>
+        <option value="0">Today</option>
+        <option value="-1">Yesterday</option>
+        <option value="-2">Two days ago</option>
+        <option value="-3">Three days ago</option>
+    </select>
+
+    <p>Selected value: <strong id="output">None yet</strong></p>
+
+    <!-- <script src="src/dropdown.js"></script> -->
+
     <div class="container">
         <div id="errors"></div>
         <canvas id="chart1">
