@@ -3,9 +3,12 @@ set -e
 PROJECT_DIR="/var/www/weather"
 cd "$PROJECT_DIR"
 
+L0G_DIR="$PROJECT_DIR/logs"
+BACKEND_DIR="$PROJECT_DIR/backend"
+
 # Kill any existing instances
-pkill -f "backend/getdata.py" || true
-pkill -f "backend/write_to_db.py" || true
+pkill -f "$BACKEND_DIR/getdata.py" || true
+pkill -f "$BACKEND_DIR/write_to_db.py" || true
 
 # Create logs directory if it doesn't exist
 mkdir -p logs || { echo "Cannot create logs directory"; exit 1; }
@@ -16,12 +19,12 @@ if [ -d "venv" ]; then
 fi
 
 # Start UDP writer in background
-python3 backend/write_to_db.py >> logs/udp.log 2>> logs/udp_err.log &
+python3 "$BACKEND_DIR/write_to_db.py" >> "$L0G_DIR/udp.log" 2>> "$L0G_DIR/udp_err.log" &
 UDP_PID=$!
 echo "UDP data logger started with PID: $UDP_PID"
 
 # Start Flask API
-python3 backend/getdata.py >> logs/api.log 2>> logs/api_err.log &
+python3 "$BACKEND_DIR/getdata.py" >> "$L0G_DIR/api.log" 2>> "$L0G_DIR/api_err.log" &
 API_PID=$!
 echo "Flask API started with PID: $API_PID"
 
