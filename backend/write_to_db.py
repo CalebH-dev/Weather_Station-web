@@ -1,6 +1,7 @@
 import sqlite3
 import socket
 import json
+import os
 from datetime import datetime
 
 
@@ -18,12 +19,15 @@ print(f"Bound to {UDP_IP}:{UDP_PORT}")
     
 
 
-with sqlite3.connect("data.db") as conn:
+with sqlite3.connect(os.path.join(os.path.dirname(__file__), 'data.db')) as conn:
 
     c = conn.cursor() # cursor
-    
-    c.execute("""CREATE TABLE IF NOT EXISTS weather_data
-             (ID INTEGER PRIMARY KEY, time TEXT, temp FLOAT, humidity FLOAT, pressure FLOAT)""")
+    try:
+        c.execute("""CREATE TABLE IF NOT EXISTS weather_data
+                (ID INTEGER PRIMARY KEY, time TEXT, temp FLOAT, humidity FLOAT, pressure FLOAT)""")
+    except Exception as e:
+        print(f"An Error has occured: {e}")
+        print("Exiting now.")
 
     while True:
         data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
