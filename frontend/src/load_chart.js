@@ -1,130 +1,132 @@
 /*
-Java script functions to draw a chart
+JavaScript functions to draw a chart
 */
-
 
 /**************** Event listener *************************/
 
 // stores two comma separated iso times
-let time_frame = "";
+let time_frame = "all,all";
 const charts = new Map();
+const chartConfigs = [];
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    // Get the dropdown element
-    from_date = ""
-    to_date = ""
+document.addEventListener('DOMContentLoaded', () => {
+    let from_date = "all";
+    let to_date   = "all";
 
-    document.getElementById("apply-button").addEventListener("click", () => {
+    const outputElement = document.getElementById("output");
+    const dropdown = document.getElementById("dropdown"); // FIX: was undefined
+    const applyBtn = document.getElementById("apply-button");
+
+    applyBtn.addEventListener("click", () => {
         const from = document.getElementById("date-from").value;
         const to   = document.getElementById("date-to").value;
 
-        if (!from) {
-            from_date = "all"
-        }
-        if (!to) {
-            to_date = "all"
-        }
-        
+        from_date = from || "all";
+        to_date   = to   || "all";
 
-    });
-
-
-    // Add an event listener to the 'change' event
-    dropdown.addEventListener('change', function() {
-        // 'this.value' refers to the value of the selected option
-        let start = new Date();
-        let end = new Date();
-
-        offset = this.value;
-
-        start.setDate(start.getDate() - offset);
-        end.setDate(end.getDate() - offset - 1);
-        start_time = start.toISOString();
-        start_time = start_time.split("Z");
-        end_time = end.toISOString();
-        end_time = end_time.split("Z");
-
-        time_frame = start_time[0] + ',' + end_time[0];
-
-        // Update the display
+        time_frame = `${from_date},${to_date}`;
         if (outputElement) {
-            outputElement.textContent = time_frame || 'None';
+            outputElement.textContent = time_frame;
         }
 
-        // Call other functions as needed
-
+        reloadAllCharts();
     });
 
-    
+
+    dropdown.addEventListener("change", function () {
+        const offset = Number(this.value);
+        const now = new Date();
+
+        const start = new Date(now);
+        const end   = new Date(now);
+
+        start.setDate(now.getDate() - offset);
+        end.setDate(now.getDate() - offset - 1);
+
+        setTimeFrame(
+            start.toISOString().split("Z")[0],
+            end.toISOString().split("Z")[0]
+        );
+
+
+        if (outputElement) {
+            outputElement.textContent = time_frame;
+        }
+
+        reloadAllCharts();
+    });
+
+
 });
-
-
 
 /**************** Fetch data *************************/
 
-
-// attempt fetching data
 async function fetch_data(endpoint) {
+    const error_div = document.getElementById('errors'); // FIX: scope
+
     try {
         const res = await fetch(endpoint);
         if (!res.ok) {
-            error_div.innerHTML = `<h2 class="error_class">Error fetching chart: HTTP ${res.status}</h2>`;
-            return;
+            error_div.innerHTML =
+                `<h2 class="error_class">Error fetching chart: HTTP ${res.status}</h2>`;
+            return null;
         }
-        data = await res.json();
-        return data;
+        return await res.json();
     } catch (err) {
-        error_div.innerHTML = `<h2 class="error_class">Error: did not receive valid JSON.<br>${err}</h2>`;
-        return;
+        error_div.innerHTML =
+            `<h2 class="error_class">Error: did not receive valid JSON.<br>${err}</h2>`;
+        return null;
     }
-    
 }
 
+/***************** Update Charts *************************/
+function reloadAllCharts() {
+    for (const cfg of chartConfigs) {
+        loadChart(
+            cfg.canvasID,
+            cfg.chartType,
+            cfg.chartLabel,
+            cfg.chartColor,
+            time_frame
+        );
+    }
+}
 
 /**************** Load chart *************************/
 
-async function loadChart(canvasID, chartType, chartLabel, chartColor, range="all,all") {
-    const error_div = document.getElementById('errors');
+async function loadChart(canvasID, chartType, chartLabel, chartColor, range = "all,all") {
+    const endpoint = `/api/weather?type=${chartType}&range=${range}`;
+    const data = await fetch_data(endpoint); // FIX: avoid implicit global
 
-    let endpoint = '/api/weather?type=' + chartType //+ '&range=2025-12-12T00:00:00.0,2025-12-13T00:00:00.0';
+    if (!data) return;
 
-    data = await fetch_data(endpoint);
-    
     const ctx = document.getElementById(canvasID);
-    // move values from json to array
-    const labels_iso = data.map(r => r.time);  
-    let values = data.map(r => r[chartType]);
 
-    let labels = [];
-    
-    // change iso format date time objects to local times
-    for (let i = 0; i < labels_iso.length; i++){
-        const date = new Date(labels_iso[i]);
-        labels.push(date.toLocaleString());
-    }
+    const labels = data.map(r =>
+        new Date(r.time).toLocaleString()
+    );
+    const values = data.map(r => r[chartType]);
 
     const existingChart = charts.get(canvasID);
 
     if (existingChart) {
-        // UPDATE
         existingChart.data.labels = labels;
         existingChart.data.datasets[0].data = values;
         existingChart.update();
         return;
     }
 
-    // load chart
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels,
+            labels,
             datasets: [{
                 label: chartLabel,
                 data: values,
                 backgroundColor: [chartColor],
-                borderWidth: 1,
                 borderColor: chartColor,
+                borderWidth: 1,
                 pointRadius: 0,
                 pointHoverRadius: 0
             }]
@@ -137,8 +139,7 @@ async function loadChart(canvasID, chartType, chartLabel, chartColor, range="all
                     font: { size: 25 }
                 },
                 legend: {
-                    position: 'right',
-                    labels: { chartColor: '#000' }
+                    position: 'right'
                 }
             },
             layout: {
@@ -152,11 +153,5 @@ async function loadChart(canvasID, chartType, chartLabel, chartColor, range="all
         }
     });
 
-
     charts.set(canvasID, chart);
-
-
 }
-
-
-
