@@ -63,6 +63,7 @@ header {
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
+    transition: all 0.3s ease;
 }
 
 /* Hover */
@@ -95,6 +96,492 @@ header {
     backdrop-filter: blur(100px);
     -webkit-backdrop-filter: blur(100px);
     border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.container-small {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px;
+    margin: 3% auto;
+    width: 95%;
+    max-width: 900px;
+    background-color: rgba(30, 30, 40, 0.5);
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.container-small > #selector {
+    flex: 1;
+    max-width: 800px;
+}
+
+#selector {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.row-dates {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.row-dates label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.row-dates h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.row-dates input[type="date"] {
+    padding: 12px 16px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.95);
+    font-family: "Times New Roman", Times, serif;
+    transition: all 0.3s ease;
+}
+
+.row-dates input[type="date"]:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.row-dates input[type="date"]:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #04AA6D;
+    box-shadow: 0 0 0 3px rgba(4, 170, 109, 0.2);
+}
+
+/* Style the date picker icon */
+.row-dates input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.row-dates input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+.row-controls {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Base styles for button and select */
+.row-controls button,
+.row-controls select {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    font-family: "Times New Roman", Times, serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Enhanced Button Styles */
+.row-controls button {
+    background: linear-gradient(135deg, #04AA6D 0%, #059862 100%);
+    border: 1px solid rgba(4, 170, 109, 0.5);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(4, 170, 109, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shine effect on hover */
+.row-controls button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.row-controls button:hover::before {
+    left: 100%;
+}
+
+.row-controls button:hover {
+    background: linear-gradient(135deg, #059862 0%, #048456 100%);
+    border-color: #04AA6D;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(4, 170, 109, 0.4);
+}
+
+.row-controls button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(4, 170, 109, 0.3);
+}
+
+/* Disabled state */
+.row-controls button:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.row-controls button:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.row-controls button:disabled::before {
+    display: none;
+}
+
+/* Select dropdown styles */
+.row-controls select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.95);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.row-controls select:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.row-controls select:focus {
+    outline: none;
+    border-color: #04AA6D;
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(4, 170, 109, 0.2);
+}
+
+/* Style the dropdown options */
+.row-controls select option {
+    background-color: #1e1e28;
+    color: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container-small {
+        padding: 24px 16px;
+    }
+    
+    .row-dates {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .row-dates label {/* 
+Main CSS Styles for weather station web app
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: "Times New Roman", Times, serif;
+}
+
+/* Make sure content is positioned above background */
+body {
+    position: relative;
+}
+
+/* Blurred background using pseudo-element - stays fixed */
+body::before {
+    content: "";
+    position: fixed;  /* This keeps it static while content scrolls */
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background-image: url('clouds.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    z-index: -1;
+}
+
+header {
+    padding: 20px;
+    color: #ccc;
+    text-align: center;
+    background: #000;
+}
+
+/* Top bar */
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+/* Inner wrapper so links keep their left-to-right layout */
+.nav-center {
+    display: inline-flex;
+}
+
+/* Links */
+.topnav a {
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Active */
+.topnav a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+.error_class {
+    padding: 5px;
+    margin: 5px;
+    color: #b30101;
+}
+
+.container { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 26px;
+    margin: 5% auto;
+    width: 95%;
+    aspect-ratio: 3 / 1;
+    background-color: rgba(30, 30, 40, 0.5);
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+    border-radius: 12px;
+}
+.container-small {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px;
+    margin: 3% auto;
+    width: 95%;
+    max-width: 900px;
+    background-color: rgba(30, 30, 40, 0.5);
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.container-small > #selector {
+    flex: 1;
+    max-width: 800px;
+}
+
+#selector {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.row-dates {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.row-dates label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.row-dates h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.row-dates input[type="date"] {
+    padding: 12px 16px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.95);
+    font-family: "Times New Roman", Times, serif;
+    transition: all 0.3s ease;
+}
+
+.row-dates input[type="date"]:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.row-dates input[type="date"]:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #04AA6D;
+}
+
+/* Style the date picker icon */
+.row-dates input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.row-controls {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+/* Enhanced Button Styles */
+.row-controls button {
+    background: linear-gradient(135deg, #04AA6D 0%, #059862 100%);
+    border: 1px solid rgba(4, 170, 109, 0.5);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(4, 170, 109, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shine effect on hover */
+.row-controls button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.row-controls button:hover::before {
+    left: 100%;
+}
+
+.row-controls button:hover {
+    background: linear-gradient(135deg, #059862 0%, #048456 100%);
+    border-color: #04AA6D;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(4, 170, 109, 0.4);
+}
+
+.row-controls button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(4, 170, 109, 0.3);
+}
+
+/* Optional: Add a disabled state if needed */
+.row-controls button:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.row-controls button:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.row-controls select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.row-controls select:focus {
+    outline: none;
+    border-color: #04AA6D;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container-small {
+        padding: 24px 16px;
+    }
+    
+    .row-dates {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .row-dates label {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .row-controls {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 }
 
 .recent_values {
@@ -171,3 +658,97 @@ header {
         padding: 32px 20px;
     }
 } 
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .row-controls {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+.recent_values {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.recent_values > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.recent_values p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.recent_values #t,
+.recent_values #h,
+.recent_values #p {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    padding: 12px 24px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    min-width: 120px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: "Times New Roman", Times, serif;
+    transition: all 0.3s ease;
+}
+
+.recent_values #t:hover,
+.recent_values #h:hover,
+.recent_values #p:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Add units after the values */
+.recent_values #t::after {
+    content: '°F';
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 4px;
+}
+
+.recent_values #h::after {
+    content: '%';
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 4px;
+}
+
+.recent_values #p::after {
+    content: ' hPa';
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .recent_values {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .container {
+        aspect-ratio: auto;
+        padding: 32px 20px;
+    }
+}

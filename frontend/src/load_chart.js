@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let from_date = "all";
     let to_date   = "all";
 
+    reloadAllCharts();
+
     const outputElement = document.getElementById("output");
     const dropdown = document.getElementById("dropdown"); // FIX: was undefined
     const applyBtn = document.getElementById("apply-button");

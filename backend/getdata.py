@@ -8,19 +8,19 @@ app = Flask(__name__)
 
 structure_keys = ['time', 'id']
 
+# Helper function to limit the number of rows in the dataset by averaging values over intervals
 def limit_data(num_rows, old_list):
     new_list = []
     n = len(old_list)
 
+     # In case of empty or invaid input:
+    if num_rows <= 0 or n <= 0:
+        return []
     
     data_keys = []
     for k in old_list[0].keys():
         if k not in structure_keys:
             data_keys.append(k)
-
-    # In case of empty or invaid input:
-    if num_rows <= 0 or n == 0:
-        return new_list
     
     # If dataset does not need to be limited
     if n < num_rows:
@@ -62,9 +62,8 @@ def limit_data(num_rows, old_list):
 
     return new_list
 
-
+# Helper function to query the database and return results as a list of dictionaries
 def query_db(query, *args):
-    # Changed from example.db to data.db
     db_path = os.path.join(os.path.dirname(__file__), 'data.db')
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
@@ -73,6 +72,7 @@ def query_db(query, *args):
     conn.close()
     return rows
 
+# API endpoint to retrieve weather data based on query parameters
 @app.route("/api/weather", methods=['GET'])
 def get_weather():   
 

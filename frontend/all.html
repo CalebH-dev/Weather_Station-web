@@ -32,7 +32,32 @@
     </header>
     
     <div class="bg-image"></div>
+    
+    
+    <div class="container-small">
+        <div id="selector">
+            <div class="row row-dates">
+                <label>
+                    <h3>From:</h3>
+                    <input type="date" id="date-from">
+                </label>
 
+                <label>
+                    <h3>To:</h3>
+                    <input type="date" id="date-to">
+                </label>
+            </div>
+            <div class="row row-controls">
+                <button id="apply-button">Apply</button>
+                <select id="dropdown">
+                    <option value="">Custom</option>
+                    <option value="1">Last 24 hours</option>
+                    <option value="7">Last 7 days</option>
+                    <option value="30">Last 30 days</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <canvas id="chart1"></canvas>
     </div>
@@ -47,9 +72,25 @@
     <script src="src/load_chart.js"></script>
 
     <script>
-        loadChart('chart1', 'temp', 'Temperature', 'green')
-        loadChart('chart2', 'humidity', 'Humidity', 'orange')
-        loadChart('chart3', 'pressure', 'Pressure', 'blue')
+        chartConfigs.push({
+            canvasID: 'chart1',
+            chartType: "temp",
+            chartLabel: "Temperature",
+            chartColor: "green"
+        });
+        chartConfigs.push({
+            canvasID: 'chart2',
+            chartType: "humidity",
+            chartLabel: "Humidity",
+            chartColor: "orange"
+        });
+        chartConfigs.push({
+            canvasID: 'chart3',
+            chartType: "pressure",
+            chartLabel: "Pressure",
+            chartColor: "blue"
+        });
+
     </script>
 
 </body>
