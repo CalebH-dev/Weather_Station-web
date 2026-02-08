@@ -11,23 +11,18 @@ const chartConfigs = [];
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    let from_date = "all";
-    let to_date   = "all";
-
+    
     reloadAllCharts();
 
     const outputElement = document.getElementById("output");
-    const dropdown = document.getElementById("dropdown"); // FIX: was undefined
+    const dropdown = document.getElementById("dropdown"); 
     const applyBtn = document.getElementById("apply-button");
 
     applyBtn.addEventListener("click", () => {
         const from = document.getElementById("date-from").value;
         const to   = document.getElementById("date-to").value;
 
-        from_date = from || "all";
-        to_date   = to   || "all";
-
-        time_frame = `${from_date},${to_date}`;
+        setTimeFrame(from, to);
         if (outputElement) {
             outputElement.textContent = time_frame;
         }
@@ -37,19 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     dropdown.addEventListener("change", function () {
+        if(!this.value) {
+            return;
+        }
         const offset = Number(this.value);
         const now = new Date();
 
         const start = new Date(now);
         const end   = new Date(now);
+        console.log("offset:", offset);
 
         start.setDate(now.getDate() - offset);
-        end.setDate(now.getDate() - offset - 1);
+        end.setDate(now.getDate() - 1);
 
-        setTimeFrame(
-            start.toISOString().split("Z")[0],
-            end.toISOString().split("Z")[0]
-        );
+        setTimeFrame(start, end);
 
 
         if (outputElement) {
@@ -94,6 +90,25 @@ function reloadAllCharts() {
         );
     }
 }
+
+/***************** Time frame handling *************************/
+function setTimeFrame(from = 'all', to = 'all') {
+
+    const normalize = (v) => {
+        if (!v || v === 'all') return 'all';
+        if (v instanceof Date) {
+            return v.toISOString().split('Z')[0];
+        }
+        // assume YYYY-MM-DD string
+        return new Date(v).toISOString().split('Z')[0];
+    };
+
+    const fromISO = normalize(from);
+    const toISO   = normalize(to);
+
+    time_frame = `${fromISO},${toISO}`;
+}
+
 
 /**************** Load chart *************************/
 
