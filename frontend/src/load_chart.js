@@ -40,10 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const start = new Date(now);
         const end   = new Date(now);
-        console.log("offset:", offset);
 
         start.setDate(now.getDate() - offset);
-        end.setDate(now.getDate() - 1);
 
         setTimeFrame(start, end);
 
